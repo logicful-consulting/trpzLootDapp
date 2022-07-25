@@ -1,0 +1,104 @@
+.lootBoxes {
+    padding: 16px 40px;
+    text-align: left;
+}
+
+.lootBoxes__boxes {
+    display: flex;
+    text-align: center;
+    font-size: 22px;
+    color: #fff;
+}
+
+.lootBoxes__boxContainer {
+    background-color: #020100;
+    border-radius: 12px;
+}
+
+.lootBoxes__boxContainerCentre {
+    margin: 0px 16px 0px 16px;
+    background-color: #020100;
+    border-radius: 12px;
+}
+
+.lootBoxes__box {
+    padding: 32px 24px 32px 24px;
+}
+
+.lootBoxes__boxImage {
+    width: 100%;
+    border-radius: 12px;
+}
+
+.lootBoxes__box > h1 {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+.lootBoxes__box > p {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.lootBoxes__box > button {
+    margin: 32px 0px 16px;
+    font-size: 16px;
+    width: 70%;
+    letter-spacing: 0.5px;
+}
+
+.lootBoxes__bronzeTitle {
+    color: #ED9338;
+}
+
+.lootBoxes__silverTitle {
+    color: #CDBFAD;
+}
+
+.lootBoxes__goldTitle {
+    color: #FFCE00;
+}
+
+@media only screen and (max-width: 790px) {
+    .lootBoxes__box > h1 {
+        font-size: 28px;
+        margin-bottom: 8px;
+    }
+
+    .lootBoxes__box > p {
+        font-size: 16px;
+        font-weight: normal;
+    }
+
+    .lootBoxes__box > button {
+        margin: 24px 0px 8px;
+        font-size: 16px;
+        width: 90%;
+        letter-spacing: 0.5px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .lootBoxes__boxes {
+        flex-wrap: wrap;
+        width: 100%;
+    }
+
+    .lootBoxes__box {
+        padding: 8px 8px 24px 8px;
+    }
+
+    .lootBoxes__boxContainer {
+        margin: 0px 16px 16px 16px;
+        width: 100%;
+    }
+
+    .lootBoxes__boxContainerCentre {
+        margin: 0px 16px 16px 16px;
+        width: 100%;
+    }
+
+    .lootBoxes__box > button {
+        width: 70%;
+    }
+}

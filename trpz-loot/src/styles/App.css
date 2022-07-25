@@ -1,0 +1,47 @@
+.App {
+  text-align: center;
+  background-color: #242321;
+  min-height: 100vh;
+}
+
+*,
+html {
+  margin: 0px;
+  padding: 0;
+}
+
+.button {
+  border: solid 1px transparent;
+  border-radius: 20px;
+  padding: 12px 16px;
+  background-color: #FDC91D;
+  color: #333;
+  font-weight: bold;
+}
+
+.button__large {
+  border: solid 1px #4B4D5A;
+  border-radius: 0px;
+  padding: 16px 24px;
+  background-color: #000000;
+  text-decoration: underline;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.button__counter {
+  border: solid 1px #4B4D5A;
+  border-radius: 4px;
+  padding: 10px 15px;
+  background-color: #383D51;
+  color: #fff;
+  font-weight: bold;
+}
+
+.button:hover {
+  background-color: #755b05;
+  color: #FDC91D;
+  cursor: pointer;
+  border: solid 1px #FDC91D;
+}

@@ -1,0 +1,25 @@
+.stakebanner {
+    padding: 16px 40px 4px 40px;
+    text-align: left;
+}
+
+.stakebanner__title {
+    display: flex;
+    padding: 10px 24px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #4D4B46;
+    border-radius: 10px;
+    justify-content: space-between;
+}
+
+.stakebanner__title > p {
+    color: #9C9C9C;
+    font-weight: bold;
+}
+
+@media only screen and (max-width: 720px) {
+    .stakebanner__title {
+        display: block;
+    }
+}

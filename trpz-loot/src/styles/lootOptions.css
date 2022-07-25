@@ -1,0 +1,62 @@
+.stakeOptions {
+    padding: 16px 40px;
+    text-align: left;
+}
+
+.stakeOptions__box {
+    display: flex;
+    padding: 32px 24px 32px 24px;
+    font-size: 22px;
+    color: #fff;
+    background-color: #4D4B46;
+    border-radius: 10px;
+}
+
+.stakeOptions__box > h1 {
+    margin: 0px 8px 16px 0px;
+}
+
+.stakeOptions__contentBox > h3 {
+    margin: 0px 8px 16px 0px;
+    color: #fff;
+}
+
+.stakeOptions__contentBox > p {
+    margin: 0px 8px 16px 0px;
+    font-size: 16px;
+}
+
+@media only screen and (max-width: 790px) {
+    .stakeOptions__box > h1 {
+        font-size: 18px;
+    }
+    
+    .stakeOptions__contentBox > h3 {
+        font-size: 18px;
+    }
+    
+    .stakeOptions__contentBox > p {
+        font-size: 14px;
+    }
+}
+
+@media only screen and (max-width: 620px) {
+    .stakeOptions__box {
+        flex-wrap: wrap;
+    }
+    
+    .stakeOptions__contentBox > h3 {
+        margin: 0px 0px 8px 0px;
+        color: #fff;
+    }
+    
+    .stakeOptions__contentBox > p {
+        margin: 0px 0px 16px 0px;
+        font-size: 16px;
+    }
+    
+
+    .button {
+        margin-bottom: 32px;
+    }
+}

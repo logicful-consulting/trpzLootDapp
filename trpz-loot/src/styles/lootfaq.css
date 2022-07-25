@@ -1,0 +1,40 @@
+.stakeFAQ {
+    padding: 4px 40px;
+    text-align: left;
+}
+
+.stakeFAQ__title {
+    padding: 16px 24px;
+    font-size: 24px;
+    color: #fff;
+    background-color: #4D4B46;
+    border-radius: 10px;
+}
+
+.stakeFAQ__title > h1 {
+    margin-bottom: 16px;
+}
+
+.stakeFAQ__contentBox > h3 {
+    margin-bottom: 16px;
+    color: #FDC91D;
+}
+
+.stakeFAQ__contentBox > p {
+    margin-bottom: 16px;
+    font-size: 16px;
+}
+
+@media only screen and (max-width: 620px) {
+    .stakeFAQ__contentBox > h1 {
+        font-size: 28px;
+        margin-bottom: 8px;
+    }
+    .stakeFAQ__contentBox > h3 {
+        font-size: 20px;
+        margin-bottom: 8px;
+    }
+    .stakeFAQ__contentBox > button {
+        font-size: 12px;
+    }
+}

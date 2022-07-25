@@ -1,0 +1,27 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 24px 40px 15px 40px;
+}
+
+.header__logo {
+    height: 40px;
+    object-fit: contain;
+}
+
+.header__center {
+	display: flex;
+	align-items: center;
+}
+
+.header__button {
+	display: flex;
+	align-items: center;
+}
+
+.header__center > p {
+    margin-right: 32px;
+    font-size: 16px;
+    font-weight: bold;
+}
