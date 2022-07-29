@@ -18,6 +18,7 @@ const LootBoxes = params => {
                             params.mintBronze()
                         }}
                         >MINT NOW</button>
+                        <p>{params.remainingTime.minutes}:{params.remainingTime.seconds}</p>
                     </div>
                 </div>
                 <div className='lootBoxes__boxContainerCentre'>

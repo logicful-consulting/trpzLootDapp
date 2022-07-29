@@ -2,11 +2,8 @@ require("@nomiclabs/hardhat-waffle");
 require("@nomiclabs/hardhat-etherscan");
 require("dotenv").config({ path: ".env" });
 
-const ALCHEMY_API_KEY_URL = process.env.ALCHEMY_API_KEY_URL;
 const ALCHEMY_API_KEY_GOERLI = process.env.ALCHEMY_API_KEY_GOERLI
-const RINKEBY_PRIVATE_KEY = process.env.RINKEBY_PRIVATE_KEY;
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY;
-const RINKEBY_SCAN_API_KEY = process.env.RINKEBY_SCAN_API_KEY;
 const CRONOS_API_KEY = process.env.CRONOS_API_KEY;
 const DEV_ACCOUNT_PRIVATE_KEY = process.env.DEV_ACCOUNT_PRIVATE_KEY
 
@@ -14,10 +11,6 @@ module.exports = {
   defaultNetwork: "hardhat",
   solidity: "0.8.4",
   networks: {
-    rinkeby: {
-      url: ALCHEMY_API_KEY_URL,
-      accounts: [RINKEBY_PRIVATE_KEY],
-    },
     goerli: {
       url: ALCHEMY_API_KEY_GOERLI,
       accounts: [DEV_ACCOUNT_PRIVATE_KEY]
@@ -38,4 +31,4 @@ module.exports = {
       goerli: ETHERSCAN_API_KEY,
     },
   }
-};
+}
