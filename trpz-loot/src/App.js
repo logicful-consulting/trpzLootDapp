@@ -277,13 +277,33 @@ function App() {
   };
 
   const getRecentNFT = async (contract) => {
-    console.log(contract)
     if(contract === "bronze") {
-      console.log("bronze");
+      const options = {
+        chain: "goerli",
+        address: walletAddress,
+        token_address: bronzeLootAddress,
+      };
+      let NFTs = await Web3Api.account.getNFTsForContract(options);
+      const newestNFT = NFTs.result[0].token_id
+      return newestNFT;
     } else if (contract === "silver") {
-      console.log("silver");
+      const options = {
+        chain: "goerli",
+        address: walletAddress,
+        token_address: silverLootAddress,
+      };
+      let NFTs = await Web3Api.account.getNFTsForContract(options);
+      const newestNFT = NFTs.result[0].token_id
+      return newestNFT;
     } else {
-
+      const options = {
+        chain: "goerli",
+        address: walletAddress,
+        token_address: goldLootAddress,
+      };
+      let NFTs = await Web3Api.account.getNFTsForContract(options);
+      const newestNFT = NFTs.result[0].token_id
+      return newestNFT;
     }
   }
 
@@ -322,7 +342,7 @@ function App() {
       );
       alert("Waiting for transaction to be completed. Please wait a second...");
       await tx.wait();
-      alert("You've successfully claimed a Bronze Box! Your reward is ...");
+      alert("You've successfully claimed a Silver Box! Your reward is ...");
       window.location.reload()
       } catch (error) {
         alert("Something went wrong. Please try again.");
@@ -341,7 +361,7 @@ function App() {
       );
       alert("Waiting for transaction to be completed. Please wait a second...");
       await tx.wait();
-      alert("You've successfully claimed a Bronze Box! Your reward is ...");
+      alert("You've successfully claimed a Gold Box! Your reward is ...");
       window.location.reload()
       } catch (error) {
         alert("Something went wrong. Please try again.");
@@ -548,6 +568,9 @@ function App() {
         silverTimerSeconds={silverTimerSeconds}
         goldTimerMinutes={goldTimerMinutes}
         goldTimerSeconds={goldTimerSeconds}
+        bronzeLeft={bronzeLeft}
+        silverLeft={silverLeft}
+        goldLeft={goldLeft}
       />
       <StakeOptions />
       <StakeFAQ />
