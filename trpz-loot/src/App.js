@@ -16,6 +16,7 @@ import WalletConnect from "@walletconnect/web3-provider";
 import dayjs from "dayjs";
 import { useMoralisWeb3Api } from "react-moralis";
 import ClipLoader from "react-spinners/ClipLoader"
+import LootBanner from "./components/LootBanner";
 
 function App() {
   const Web3Api = useMoralisWeb3Api();
@@ -36,7 +37,9 @@ function App() {
   const [bronzeURI, setBronzeURI] = useState(null);
   const [silverURI, setSilverURI] = useState(null);
   const [goldURI, setGoldURI] = useState(null);
-  const [remainingTime, setRemainingTime] = useState("00:00");
+  const [bronzeLeft, setBronzeLeft] = useState(null);
+  const [silverLeft, setSilverLeft] = useState(null);
+  const [goldLeft, setGoldLeft] = useState(null);
 
   const [readTrpzContract, setReadTrpzContract] = useState(null);
   const [writeTrpzContract, setWriteTrpzContract] = useState(null);
@@ -70,6 +73,7 @@ function App() {
     "function boxCost() public view returns (uint256)",
     "function tokenURI(uint256) public view returns (string)",
     "function safeTransferFrom(address, address, uint256) public returns (bool)",
+    "function boxesAvailable() public view returns (uint64)",
   ];
 
   const providerOptions = {
@@ -108,7 +112,8 @@ function App() {
       setLoading(true);
       await getTokenIds();
       await getURIs();
-      await getTimers();
+      getLootInfo()
+      getTimers();
       setLoading(false);
     };
     getInfo();
@@ -209,6 +214,18 @@ function App() {
     setBronzeURI(bronzeURI);
   };
 
+  const getLootInfo = async () => {
+    if (!readGoldLootContract) return;
+    if (!readSilverLootContract) return;
+    if (!readBronzeLootContract) return;
+    const bronzeLeft = await readBronzeLootContract.boxesAvailable();
+    const silverLeft = await readSilverLootContract.boxesAvailable();
+    const goldLeft = await readGoldLootContract.boxesAvailable();
+    setBronzeLeft(bronzeLeft.toNumber())
+    setSilverLeft(silverLeft.toNumber())
+    setGoldLeft(goldLeft.toNumber())
+  }
+
   const getTokenIds = async () => {
     try {
       if (bronzeBoxes > 0) {
@@ -223,6 +240,7 @@ function App() {
           bronzeObjects.push(NFTs.result[i].token_id);
         }
         setBronzeBoxArray(bronzeObjects);
+        console.log(bronzeObjects);
       }
       if (silverBoxes > 0) {
         const options = {
@@ -236,6 +254,7 @@ function App() {
           silverObjects.push(NFTs.result[i].token_id);
         }
         setSilverBoxArray(silverObjects);
+        console.log(silverObjects);
       }
       if (goldBoxes > 0) {
         const options = {
@@ -249,6 +268,7 @@ function App() {
           goldObjects.push(NFTs.result[i].token_id);
         }
         setGoldBoxArray(goldObjects);
+        console.log(goldObjects);
       }
     } catch (error) {
       console.log(error);
@@ -314,6 +334,7 @@ function App() {
     if (!readBronzeLootContract) return;
     // const bronzeTimer = await readBronzeLootContract.addressCooldown();
     // console.log(bronzeTimer);
+    startTimer();
   };
 
   const mintBronze = async () => {
@@ -398,43 +419,34 @@ function App() {
     setMinted(false);
   }
 
-  
-  // Timer logic
-  const updateRemainingTime = (countdown) => {
-    setRemainingTime(getRemainingTime(countdown));
-  };
+  // Timer logic 2
+  const [timerMinutes, setTimerMinutes] = useState(null);
+  const [timerSeconds, setTimerSeconds] = useState(null);
 
-  const getRemainingTime = (timestamp) => {
-    const timestampDayjs = dayjs(timestamp);
-    const nowDayjs = dayjs();
-    return {
-      seconds: getRemainingSeconds(nowDayjs, timestampDayjs),
-      minutes: getRemainingMinutes(nowDayjs, timestampDayjs),
-    };
-  };
-
-  const getRemainingSeconds = (nowDayjs, timestampDayjs) => {
-    const seconds = timestampDayjs.diff(nowDayjs, "seconds") % 60;
-    return padWithZero(seconds, 2);
-  };
-
-  const getRemainingMinutes = (nowDayjs, timestampDayjs) => {
-    const minutes = timestampDayjs.diff(nowDayjs, "minutes") % 60;
-    return padWithZero(minutes, 2);
-  };
-
-  const padWithZero = (number, minLength) => {
-    const numberString = number.toString();
-    if (numberString.length >= minLength) return numberString;
-    return "0".repeat(minLength - numberString.length) + numberString;
-  };
-
-  // useEffect(() => {
-  //   const intervalId = setInterval(() => {
-  //     updateRemainingTime(2210214000000)
-  //   }, 1000);
-  //   return() => clearInterval(intervalId);
-  // }, []);
+  let interval; 
+  const startTimer = () => {
+    const countDownDate = new Date("July 31, 2022").getTime();
+    interval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = countDownDate - now;
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+      if(distance < 0) {
+        clearInterval(interval.current);
+        setTimerMinutes("00");
+        setTimerSeconds("00");
+      } else {
+        setTimerMinutes(minutes);
+        if(minutes < 10) {
+          setTimerMinutes("0" + minutes);
+        }
+        setTimerSeconds(0 + seconds);
+        if(seconds < 10) {
+          setTimerSeconds("0" + seconds);
+        }
+      }
+    })
+  }
 
   return (
     <div className="App">
@@ -463,12 +475,17 @@ function App() {
       claimingBox={claimingBox}
       claimLoot={claimLoot}
       />}
+      <LootBanner/>
       <LootBoxes
         mintBronze={mintBronze}
         bronzeTime={bronzeTime}
         mintSilver={mintSilver}
         mintGold={mintGold}
-        remainingTime={remainingTime}
+        timerMinutes={timerMinutes}
+        timerSeconds={timerSeconds}
+        bronzeLeft={bronzeLeft}
+        silverLeft={silverLeft}
+        goldLeft={goldLeft}
       />
       <StakeOptions />
       <StakeFAQ />

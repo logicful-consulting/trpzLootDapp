@@ -1,0 +1,23 @@
+.lootbanner {
+    padding: 16px 80px 4px 80px;
+}
+
+.lootbanner__title {
+    padding: 10px 24px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #FDC91D;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.lootbanner__title > h1 {
+    color: #333;
+    font-weight: bold;
+}
+
+@media only screen and (max-width: 720px) {
+    .lootbanner__title {
+        display: block;
+    }
+}
