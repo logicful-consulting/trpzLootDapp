@@ -79,7 +79,7 @@
     border: solid transparent 2px;
     border-radius: 6px;
     background-color: #3C3C3C;
-    margin: 16px 12px 0px 12px;
+    margin: 16px 10px 0px 12px;
     width: 22%;
 }
 
@@ -99,6 +99,26 @@
     color: #fff;
     text-align: center;
     background-color: #ED9338;
+    border-radius: 4px;
+    padding: 2px 0px;
+}
+
+.stakebody__silverRank {
+    font-size: 12px;
+    font-weight: bold;;
+    color: #fff;
+    text-align: center;
+    background-color: #CDBFAD;
+    border-radius: 4px;
+    padding: 2px 0px;
+}
+
+.stakebody__goldRank {
+    font-size: 12px;
+    font-weight: bold;;
+    color: #fff;
+    text-align: center;
+    background-color: #FFCE00;
     border-radius: 4px;
     padding: 2px 0px;
 }

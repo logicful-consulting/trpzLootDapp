@@ -13,17 +13,23 @@ import LootStats from "./components/LootStats";
 import Modal from "./components/Modal";
 import Web3Modal from "web3modal";
 import WalletConnect from "@walletconnect/web3-provider";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
+import { useMoralisWeb3Api } from "react-moralis";
+import ClipLoader from "react-spinners/ClipLoader"
 
 function App() {
+  const Web3Api = useMoralisWeb3Api();
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
   const [walletAddress, setWalletAddress] = useState(null);
   const [trpzBalance, setTrpzBalance] = useState(null);
   const [lootBalance, setLootBalance] = useState(null);
   const [bronzeBoxes, setBronzeBoxes] = useState(null);
+  const [bronzeBoxArray, setBronzeBoxArray] = useState([]);
   const [silverBoxes, setSilverBoxes] = useState(null);
+  const [silverBoxArray, setSilverBoxArray] = useState([]);
   const [goldBoxes, setGoldBoxes] = useState(null);
+  const [goldBoxArray, setGoldBoxArray] = useState([]);
   const [bronzeTime, setBronzeTime] = useState(null);
   const [silverTime, setSilverTime] = useState(null);
   const [goldTime, setGoldTime] = useState(null);
@@ -31,42 +37,6 @@ function App() {
   const [silverURI, setSilverURI] = useState(null);
   const [goldURI, setGoldURI] = useState(null);
   const [remainingTime, setRemainingTime] = useState("00:00");
-
-  const updateRemainingTime = (countdown) => {
-    setRemainingTime(getRemainingTime(countdown));
-  }
-
-  const getRemainingTime = (timestamp) => {
-    const timestampDayjs = dayjs(timestamp)
-    const nowDayjs = dayjs()
-    return {
-      seconds: getRemainingSeconds(nowDayjs, timestampDayjs),
-      minutes: getRemainingMinutes(nowDayjs, timestampDayjs),
-    }
-  }
-
-  const getRemainingSeconds = (nowDayjs, timestampDayjs) => {
-    const seconds = timestampDayjs.diff(nowDayjs, 'seconds') % 60;
-    return padWithZero(seconds, 2);
-  }
-
-  const getRemainingMinutes = (nowDayjs, timestampDayjs) => {
-    const minutes = timestampDayjs.diff(nowDayjs, 'minutes') % 60;
-    return padWithZero(minutes, 2);
-  }
-
-  const padWithZero = (number, minLength) => {
-    const numberString = number.toString()
-    if(numberString.length >= minLength) return numberString;
-    return "0".repeat(minLength - numberString.length) + numberString;
-  }
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      updateRemainingTime(2210214000000)
-    }, 1000);
-    return() => clearInterval(intervalId);
-  }, []);
 
   const [readTrpzContract, setReadTrpzContract] = useState(null);
   const [writeTrpzContract, setWriteTrpzContract] = useState(null);
@@ -79,8 +49,11 @@ function App() {
 
   const [openModal, setOpenModal] = useState(false);
   const [minted, setMinted] = useState(false);
+  const [claimed, setClaimed] = useState(false);
+  const [claimingBox, setClaimingBox] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const adminAddress = ""
+  const adminAddress = "0xF545eDA04d42046B000d833F26dA9454657ac581";
   const trpzAddress = "0xa0a4f43b83971Afb63bEd3F619203AE0fb164AC7";
   const trpzABI = [
     "function name() public view returns (string memory)",
@@ -96,7 +69,7 @@ function App() {
     "function balanceOf(address) public view returns (uint256)",
     "function boxCost() public view returns (uint256)",
     "function tokenURI(uint256) public view returns (string)",
-    "function transfer(address, uint256) public returns (bool)",
+    "function safeTransferFrom(address, address, uint256) public returns (bool)",
   ];
 
   const providerOptions = {
@@ -115,8 +88,8 @@ function App() {
 
   const web3Modal = new Web3Modal({
     network: "cronos",
-    providerOptions
-})
+    providerOptions,
+  });
 
   useEffect(() => {
     getContractInstance();
@@ -132,29 +105,30 @@ function App() {
 
   useEffect(() => {
     const getInfo = async () => {
+      setLoading(true);
+      await getTokenIds();
       await getURIs();
-      await getTimers()
+      await getTimers();
+      setLoading(false);
     };
     getInfo();
   }, [lootBalance]);
 
-  useEffect(() => {
-  
-  }, 1000);
+  useEffect(() => {}, 1000);
 
   const connectWallet = async () => {
     try {
-      await web3Modal.clearCachedProvider()
+      await web3Modal.clearCachedProvider();
       const provider = await web3Modal.connect();
       const library = new providers.Web3Provider(provider);
-      const {chainId} = await library.getNetwork()
+      const { chainId } = await library.getNetwork();
       if (chainId !== 5) {
-          alert("Use Cronos network to connect")
+        alert("Use Cronos network to connect");
       }
       const accounts = await library.listAccounts();
-      const signer = await library.getSigner()
-      setSigner(signer)
-      setProvider(library)
+      const signer = await library.getSigner();
+      setSigner(signer);
+      setProvider(library);
       setWalletAddress(accounts[0]);
     } catch (error) {
       console.log(error);
@@ -224,42 +198,127 @@ function App() {
   };
 
   const getURIs = async () => {
-    if(!readGoldLootContract) return;
-    if(!readSilverLootContract) return;
-    if(!readBronzeLootContract) return;
-    console.log("Running get URI")
+    if (!readGoldLootContract) return;
+    if (!readSilverLootContract) return;
+    if (!readBronzeLootContract) return;
     const goldURI = await readGoldLootContract.tokenURI(1);
     const silverURI = await readSilverLootContract.tokenURI(1);
     const bronzeURI = await readBronzeLootContract.tokenURI(1);
     setGoldURI(goldURI);
     setSilverURI(silverURI);
     setBronzeURI(bronzeURI);
-  }
+  };
+
+  const getTokenIds = async () => {
+    try {
+      if (bronzeBoxes > 0) {
+        const options = {
+          chain: "goerli",
+          address: walletAddress,
+          token_address: bronzeLootAddress,
+        };
+        let NFTs = await Web3Api.account.getNFTsForContract(options);
+        let bronzeObjects = [];
+        for(let i = 0; i < NFTs.result.length; i++) {
+          bronzeObjects.push(NFTs.result[i].token_id);
+        }
+        setBronzeBoxArray(bronzeObjects);
+      }
+      if (silverBoxes > 0) {
+        const options = {
+          chain: "goerli",
+          address: walletAddress,
+          token_address: silverLootAddress,
+        };
+        let NFTs = await Web3Api.account.getNFTsForContract(options);
+        let silverObjects = [];
+        for(let i = 0; i < NFTs.result.length; i++) {
+          silverObjects.push(NFTs.result[i].token_id);
+        }
+        setSilverBoxArray(silverObjects);
+      }
+      if (goldBoxes > 0) {
+        const options = {
+          chain: "goerli",
+          address: walletAddress,
+          token_address: goldLootAddress,
+        };
+        let NFTs = await Web3Api.account.getNFTsForContract(options);
+        let goldObjects = [];
+        for(let i = 0; i < NFTs.result.length; i++) {
+          goldObjects.push(NFTs.result[i].token_id);
+        }
+        setGoldBoxArray(goldObjects);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const claimLoot = async (boxType, tokenId) => {
-    let boxAddress;
-    if(boxType === "bronze") {
-      const writeBronzeContract = new ethers.Contract(bronzeLootAddress, lootABI, signer);
-      const tx = await writeBronzeContract.transfer(walletAddress, adminAddress, tokenId);
-      alert("Waiting for transaction to be mined...");
+    setClaimed(false);
+    if (boxType === "bronze") {
+      console.log("Started bronze: ", tokenId);
+      const writeBronzeContract = new ethers.Contract(
+        bronzeLootAddress,
+        lootABI,
+        signer
+      );
+      const tx = await writeBronzeContract.safeTransferFrom(
+        walletAddress,
+        adminAddress,
+        tokenId
+      );
+      alert("Waiting for transaction to be completed. Please wait a second...");
       await tx.wait();
-    } else if(boxType === "silver") {
-
+      alert("You've successfully claimed a Bronze Box! Your reward is ...");
+      window.location.reload();
+    } else if (boxType === "silver") {
+      console.log("Started silver: ", tokenId);
+      const writeSilverContract = new ethers.Contract(
+        silverLootAddress,
+        lootABI,
+        signer
+      );
+      const tx = await writeSilverContract.safeTransferFrom(
+        walletAddress,
+        adminAddress,
+        tokenId
+      );
+      alert("Waiting for transaction to be completed. Please wait a second...");
+      await tx.wait();
+      alert("You've successfully claimed a Bronze Box! Your reward is ...");
+      window.location.reload()
     } else {
-
+      console.log("Started gold: ", tokenId);
+      const writeGoldContract = new ethers.Contract(
+        goldLootAddress,
+        lootABI,
+        signer
+      );
+      const tx = await writeGoldContract.safeTransferFrom(
+        walletAddress,
+        adminAddress,
+        tokenId
+      );
+      alert("Waiting for transaction to be completed. Please wait a second...");
+      await tx.wait();
+      alert("You've successfully claimed a Bronze Box! Your reward is ...");
+      window.location.reload()
     }
-  }
+  };
 
   const getTimers = async () => {
-    if(!readGoldLootContract) return;
-    if(!readSilverLootContract) return;
-    if(!readBronzeLootContract) return;
-    const bronzeTimer = await readBronzeLootContract.addressCooldown();
-    console.log(bronzeTimer)
-  }
+    if (!readGoldLootContract) return;
+    if (!readSilverLootContract) return;
+    if (!readBronzeLootContract) return;
+    // const bronzeTimer = await readBronzeLootContract.addressCooldown();
+    // console.log(bronzeTimer);
+  };
 
   const mintBronze = async () => {
     if (!writeBronzeLootContract) return;
+    if(!readBronzeLootContract) return;
     if (
       (await readTrpzContract.allowance(walletAddress, bronzeLootAddress)) <
       (await readBronzeLootContract.boxCost()).toNumber() * 10
@@ -301,6 +360,7 @@ function App() {
     try {
       const tx = await writeSilverLootContract.mintBox();
       setOpenModal(true);
+      setClaimingBox("silver")
       await tx.wait();
       setMinted(true);
     } catch (error) {
@@ -338,22 +398,71 @@ function App() {
     setMinted(false);
   }
 
+  
+  // Timer logic
+  const updateRemainingTime = (countdown) => {
+    setRemainingTime(getRemainingTime(countdown));
+  };
+
+  const getRemainingTime = (timestamp) => {
+    const timestampDayjs = dayjs(timestamp);
+    const nowDayjs = dayjs();
+    return {
+      seconds: getRemainingSeconds(nowDayjs, timestampDayjs),
+      minutes: getRemainingMinutes(nowDayjs, timestampDayjs),
+    };
+  };
+
+  const getRemainingSeconds = (nowDayjs, timestampDayjs) => {
+    const seconds = timestampDayjs.diff(nowDayjs, "seconds") % 60;
+    return padWithZero(seconds, 2);
+  };
+
+  const getRemainingMinutes = (nowDayjs, timestampDayjs) => {
+    const minutes = timestampDayjs.diff(nowDayjs, "minutes") % 60;
+    return padWithZero(minutes, 2);
+  };
+
+  const padWithZero = (number, minLength) => {
+    const numberString = number.toString();
+    if (numberString.length >= minLength) return numberString;
+    return "0".repeat(minLength - numberString.length) + numberString;
+  };
+
+  // useEffect(() => {
+  //   const intervalId = setInterval(() => {
+  //     updateRemainingTime(2210214000000)
+  //   }, 1000);
+  //   return() => clearInterval(intervalId);
+  // }, []);
+
   return (
     <div className="App">
       <Header connectWallet={connectWallet} walletAddress={walletAddress} />
       <StakeBanner trpzBalance={trpzBalance} lootBalance={lootBalance} />
-      <LootStats 
-      bronzeBoxes={bronzeBoxes}
-      silverBoxes={silverBoxes}
-      goldBoxes={goldBoxes}
+      <LootStats
+        bronzeBoxes={bronzeBoxes}
+        silverBoxes={silverBoxes}
+        goldBoxes={goldBoxes}
       />
+      {loading ? <ClipLoader color={'#D0021B'} loading={loading} size ={150} />
+      :
       <ClaimBoxes
-      bronzeBoxes={bronzeBoxes}
-      silverBoxes={silverBoxes}
-      goldBoxes={goldBoxes}
-      
+        bronzeBoxes={bronzeBoxes}
+        bronzeBoxArray={bronzeBoxArray}
+        silverBoxes={silverBoxes}
+        silverBoxArray={silverBoxArray}
+        goldBoxes={goldBoxes}
+        goldBoxArray={goldBoxArray}
+        claimLoot={claimLoot}
       />
-      {openModal && <Modal closeModal={closeModal} minted={minted} />}
+      }
+      {openModal && <Modal 
+      closeModal={closeModal} 
+      minted={minted} 
+      claimingBox={claimingBox}
+      claimLoot={claimLoot}
+      />}
       <LootBoxes
         mintBronze={mintBronze}
         bronzeTime={bronzeTime}
