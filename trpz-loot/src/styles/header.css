@@ -20,8 +20,15 @@
 	align-items: center;
 }
 
-.header__center > p {
-    margin-right: 32px;
+.header__center > a {
+    margin: 0px 8px 0px 8px;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+}
+
+.header__center > a:hover {
+    cursor: pointer;
+    text-decoration: underline;
 }

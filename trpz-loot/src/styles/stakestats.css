@@ -1,0 +1,38 @@
+.stakestats {
+    padding: 4px 40px;
+    text-align: left;
+}
+
+.stakestats__boxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    row-gap: 8px;
+}
+
+.stakestats__box {
+    background-color: #4D4B46;
+    border-radius: 8px;
+    padding: 18px 16px;
+    flex-grow: 1;
+}
+
+.stakestats__boxTitle {
+    font-size: 16px;
+    color: rgb(156, 156, 156);
+}
+
+.stakestats__boxStat {
+    font-size: 28px;
+    font-weight: bold;
+    color: #fff;
+}
+
+@media only screen and (max-width: 1028px) {
+    .stakestats__boxStat {
+        font-size: 20px;
+    }
+    .stakestats__boxTitle {
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,305 @@
+.stakebody {
+    text-align: left;
+    padding: 4px 40px;
+}
+
+.stakebody__mainBox {
+    background-color: #4D4B46;
+    border-radius: 10px;
+    padding: 16px 0px;
+}
+
+.stakebody__title {
+    display: flex;
+    padding: 8px 0px 0px 16px;
+}
+
+.stakebody__title > h3 {
+    margin: 0px 16px 12px 0px;
+}
+
+.stakebody__buttonBar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.stakebody__sorting {
+    display: flex;
+    margin: 0px 12px 8px 16px;
+    flex-grow: 1;
+}
+
+.stakebody__batchStake {
+    display: flex;
+    margin: 16px 12px 8px 16px;
+    flex-grow: 1;
+    flex-wrap: nowrap;
+    flex-direction: row-reverse;
+}
+
+.stakebody__batchStakeButton {
+    border: solid 1px transparent;
+    border-radius: 20px;
+    padding: 12px 16px;
+    background-color: #FDC91D;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    flex-grow: 1;
+    max-width: 150px;
+}
+
+.stakebody__batchStakeButtonCounter {
+    border: solid 1px #FDC91D;
+    border-radius: 20px;
+    padding: 12px 16px;
+    background-color: #3C3C3C;
+    color: #FDC91D;
+    font-weight: bold;
+    cursor: pointer;
+    flex-grow: 1;
+    max-width: 150px;
+}
+
+.stakebody__batchStake > button {
+    margin-right: 16px;
+}
+
+.stakebody__sortBox {
+    margin-right: 32px;
+}
+
+.stakebody__boxes {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.stakebody__box {
+    border: solid transparent 2px;
+    border-radius: 6px;
+    background-color: #3C3C3C;
+    margin: 16px 10px 0px 12px;
+    width: 22%;
+}
+
+.stakebody__boxImg {
+    text-align: center;
+    border-radius: 6px 6px 0px 0px;
+    width: 100%
+}
+
+.stakebody__boxText {
+    padding: 2px 4px;
+}
+
+.stakebody__bronzeRank {
+    font-size: 12px;
+    font-weight: bold;;
+    color: #fff;
+    text-align: center;
+    background-color: #ED9338;
+    border-radius: 4px;
+    padding: 2px 0px;
+}
+
+.stakebody__silverRank {
+    font-size: 12px;
+    font-weight: bold;;
+    color: #fff;
+    text-align: center;
+    background-color: #CDBFAD;
+    border-radius: 4px;
+    padding: 2px 0px;
+}
+
+.stakebody__goldRank {
+    font-size: 12px;
+    font-weight: bold;;
+    color: #fff;
+    text-align: center;
+    background-color: #FFCE00;
+    border-radius: 4px;
+    padding: 2px 0px;
+}
+
+.stakebody__boxTitle {
+    font-size: 16px;
+    font-weight: bold;;
+    color: #FDC91D;
+    padding: 4px 0px 4px 8px;
+}
+
+.stakebody__boxReward {
+    font-size: 12px;
+    font-weight: 700; 
+    color: #FDC91D;
+    padding: 4px 0px 4px 8px;
+}
+
+.stakebody__boxButtons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 8px 8px 8px;
+}
+
+.stakebody__boxCheck {
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.stakebody__boxButton {
+    border: solid 1px #4B4D5A;
+    border-radius: 4px;
+    padding: 10px 20px;
+    background-color: #383D51;
+    color: #fff;
+    font-weight: bold;
+}
+
+.stakebody__boxButtonSingle {
+    flex: 1;
+    border: solid 1px #4B4D5A;
+    border-radius: 4px;
+    padding: 10px 20px;
+    background-color: #FDC91D;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.stakebody__boxButtonSingleCounter {
+    flex: 1;
+    border: solid 1px #FDC91D;
+    border-radius: 4px;
+    padding: 10px 20px;
+    background-color: transparent;
+    color: #FDC91D;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.stakebody__boxCounterButton {
+    border: solid 1px #4B4D5A;
+    border-radius: 4px;
+    padding: 10px 18px;
+    background-color: transparent;
+    color: #383D51;
+    font-weight: bold;
+}
+
+.stakebody__titleButtonCounter {
+    border: solid 1px transparent;
+    border-radius: 20px;
+    padding: 12px 16px;
+    background-color: #FDC91D;
+    color: #333;
+    font-weight: bold;
+}
+
+.checkbox__container {
+    cursor: pointer;
+}
+
+.stakebody__buttonDesc {
+    font-size: 12px;
+}
+
+.stakebody__sortBox > p {
+    color: #FDC91D;
+    margin-bottom: 8px;
+}
+
+.stakebody__sortBox > select {
+    padding: 4px 4px;
+    border: 1px solid #fff;
+    background-color: #242321;
+    color: #FDC91D;
+}
+
+.stakebody__title > h3:hover {
+  border-bottom: 3px solid #29ABE2;
+}
+
+.stakebody__title > button {
+    margin-right: 8px;
+}
+
+.stakebody__batchStakeButton:hover {
+    border: solid 1px #FDC91D;
+    background-color: #755b05;
+    color: #FDC91D;
+}
+
+.stakebody__batchStakeButton:disabled {
+    border: solid 1px #999999;
+    background-color: #cccccc;
+    color: #666666;
+    opacity: 0.5;
+}
+
+.stakebody__batchStakeButtonCounter:hover {
+    background-color: #333;
+}
+
+input[type="checkbox"] {
+    height: 18px;
+    width: 18px;
+    border-radius: 10px;
+    border: 1px solif #aaa;
+    cursor: pointer;
+}
+
+
+@media only screen and (max-width: 1028px) {
+    .stakebody__box {
+        width: 21%;
+    }
+    .stakebody__boxRank {
+        font-size: 10px;
+    }
+    .stakebody__boxTitle {
+        font-size: 14px;;
+    }
+    .stakebody__boxReward {
+        font-size: 12px;;
+    }
+}
+
+
+@media only screen and (max-width: 800px) {
+    .stakebody__box {
+        width: 28%;
+    }
+    .stakebody__boxRank {
+        font-size: 10px;
+    }
+    .stakebody__boxTitle {
+        font-size: 14px;;
+    }
+    .stakebody__boxReward {
+        font-size: 12px;;
+    }
+}
+
+@media only screen and (max-width: 620px) {
+    .stakebody__box {
+        width: 40%;
+    }
+    .stakebody__boxRank {
+        font-size: 10px;
+    }
+    .stakebody__boxTitle {
+        font-size: 12px;;
+    }
+    .stakebody__boxReward {
+        font-size: 10px;;
+    }
+    .stakebody__batchStakeButton {
+        font-size: 12px;
+    }
+    .stakebody__batchStakeButtonCounter {
+        font-size: 12px;
+    }
+}

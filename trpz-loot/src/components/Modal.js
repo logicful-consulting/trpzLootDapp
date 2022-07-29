@@ -19,7 +19,12 @@ const Modal = (params) => {
           </p>
         </div>
           {params.minted && <div className="modalFooter">
-            <button className="button">Claim Rewards</button>
+            <button className="button"
+            onClick={() => {
+              const NFTId = params.getRecentNFT(params.claimingBox)
+              params.claimLoot(params.claimingBox, NFTId)
+            }}
+            >Claim Rewards</button>
           </div>
           }
       </div>

@@ -21,7 +21,7 @@ contract lootBoxes is ERC721, AccessControl {
     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
     mapping(uint256 => mapping(address => uint64)) public ownerClaimsByLaunch;
-    mapping(address => uint256) addressCooldown;
+    mapping(address => uint256) public addressCooldown;
 
     // ======================== MODIFIERS ========================== //
     modifier whenNotPaused() {
