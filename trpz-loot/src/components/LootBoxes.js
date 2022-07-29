@@ -2,6 +2,7 @@ import "../styles/App.css";
 import "../styles/lootboxes.css";
 import React from "react";
 import BoxIMG from "./BoxTest.PNG";
+import Countdown from 'react-countdown';
 
 const LootBoxes = (params) => {
   return (
@@ -32,9 +33,9 @@ const LootBoxes = (params) => {
               MINT NOW
             </button>
             <div className="lootBoxes__timerBox">
-              {params.timerMinutes && (
+              {params.bronzeTimerMinutes && (
                 <h3>
-                  Cooldown: {params.timerMinutes}:{params.timerSeconds}
+                  Cooldown: {params.bronzeTimerMinutes}:{params.bronzeTimerSeconds}
                 </h3>
               )}
             </div>
@@ -64,6 +65,13 @@ const LootBoxes = (params) => {
             >
               MINT NOW
             </button>
+            <div className="lootBoxes__timerBox">
+              {params.silverTimerMinutes && (
+                <h3>
+                  Cooldown: {params.silverTimerMinutes}:{params.silverTimerSeconds}
+                </h3>
+              )}
+            </div>
           </div>
         </div>
         <div className="lootBoxes__boxContainer">
@@ -86,6 +94,13 @@ const LootBoxes = (params) => {
             >
               MINT NOW
             </button>
+            <div className="lootBoxes__timerBox">
+              {params.goldTimerMinutes && (
+                <h3>
+                  Cooldown: {params.goldTimerMinutes}:{params.goldTimerSeconds}
+                </h3>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -26,7 +26,7 @@ const ClaimBoxes = (params) => {
               </>
             )
           })}
-        {params.silverBoxes &&
+        {params.silverBoxArray &&
           params.silverBoxArray.map((box, index) => {
             return (
               <>
@@ -48,7 +48,7 @@ const ClaimBoxes = (params) => {
               </>
             )
           })}
-        {params.goldBoxes &&
+        {params.goldBoxArray &&
           params.goldBoxArray.map((box, index) => {
             return (
               <>

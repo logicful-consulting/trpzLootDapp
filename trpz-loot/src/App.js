@@ -64,8 +64,8 @@ function App() {
     "function approve(address, uint256) public returns (bool)",
     "function allowance(address, address) public view returns (uint256)",
   ];
-  const goldLootAddress = "0x71E0158eC06abC632c11581292B2C041bEcc7FDe";
-  const silverLootAddress = "0x5630E973f37d7e06D21A08ad0953005173f1bBDb";
+  const goldLootAddress = "0x70Fa4308686d6d4587443478bC39EDB5105dcc84";
+  const silverLootAddress = "0x68FEe038CF321539c0A365BBB995796A63ead3d3";
   const bronzeLootAddress = "0xF7d4F29caF0F8454D0Cc3f847683e43C7a1FB20a";
   const lootABI = [
     "function mintBox() external",
@@ -354,9 +354,57 @@ function App() {
     if (!readSilverLootContract) return;
     if (!readBronzeLootContract) return;
     const bronzeTimer = await readBronzeLootContract.addressCooldown(walletAddress);
-    const time = new Date(bronzeTimer.toNumber() * 1000);
-    startTimer(time.getTime());
+    const bronzeTime = new Date(bronzeTimer.toNumber() * 1000);
+    const silverTimer = await readSilverLootContract.addressCooldown(walletAddress);
+    const silverTime = new Date(silverTimer.toNumber() * 1000);
+    const goldTimer = await readGoldLootContract.addressCooldown(walletAddress);
+    const goldTime = new Date(goldTimer.toNumber() * 1000);
+    startTimer(bronzeTime.getTime(), silverTime.getTime(), goldTime.getTime());
   };
+
+    // Timer logic 2
+    const [bronzeTimerMinutes, setBronzeTimerMinutes] = useState(null);
+    const [bronzeTimerSeconds, setBronzeTimerSeconds] = useState(null);
+    const [silverTimerMinutes, setSilverTimerMinutes] = useState(null);
+    const [silverTimerSeconds, setSilverTimerSeconds] = useState(null);
+    const [goldTimerMinutes, setGoldTimerMinutes] = useState(null);
+    const [goldTimerSeconds, setGoldTimerSeconds] = useState(null);
+  
+    let interval; 
+    const startTimer = (date, silverDate, goldDate) => {
+      interval = setInterval(() => {
+        const distance = date - new Date().getTime();
+        const silverDistance = silverDate - new Date().getTime();
+        const goldDistance = goldDate - new Date().getTime();
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const silverMinutes = Math.floor((silverDistance % (1000 * 60 * 60)) / (1000 * 60));
+        const goldMinutes = Math.floor((goldDistance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        const silverSeconds = Math.floor((silverDistance % (1000 * 60)) / 1000);
+        const goldSeconds = Math.floor((goldDistance % (1000 * 60)) / 1000);
+        if(distance < 0) {
+          clearInterval(interval.current);
+          setBronzeTimerMinutes("00")
+          setBronzeTimerSeconds("00")
+          setSilverTimerMinutes("00")
+          setSilverTimerSeconds("00")
+          setGoldTimerMinutes("00")
+          setGoldTimerSeconds("00")
+        } else {
+          setBronzeTimerMinutes(minutes);
+          setBronzeTimerSeconds(0 + seconds);
+          setSilverTimerMinutes(silverMinutes);
+          setSilverTimerSeconds(silverSeconds);
+          setGoldTimerMinutes(goldMinutes);
+          setGoldTimerSeconds(goldSeconds);
+          if(seconds < 10) {
+            setBronzeTimerSeconds("0" + seconds);
+            setSilverTimerSeconds("0" + silverSeconds);
+            setGoldTimerSeconds("0" + goldSeconds);
+          }
+        }
+      })
+    }
 
   const mintBronze = async () => {
     if (!writeBronzeLootContract) return;
@@ -442,33 +490,6 @@ function App() {
     setMinted(false);
   }
 
-  // Timer logic 2
-  const [timerMinutes, setTimerMinutes] = useState(null);
-  const [timerSeconds, setTimerSeconds] = useState(null);
-
-  let interval; 
-  const startTimer = (date) => {
-    interval = setInterval(() => {
-      const distance = date - new Date().getTime();
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-      if(distance < 0) {
-        clearInterval(interval.current);
-        setTimerMinutes("00")
-        setTimerSeconds("00")
-      } else {
-        setTimerMinutes(minutes);
-        if(minutes < 10) {
-          setTimerMinutes("0" + minutes);
-        }
-        setTimerSeconds(0 + seconds);
-        if(seconds < 10) {
-          setTimerSeconds("0" + seconds);
-        }
-      }
-    })
-  }
-
   return (
     <div className="App">
       <Header connectWallet={connectWallet} walletAddress={walletAddress} />
@@ -503,11 +524,12 @@ function App() {
         bronzeTime={bronzeTime}
         mintSilver={mintSilver}
         mintGold={mintGold}
-        timerMinutes={timerMinutes}
-        timerSeconds={timerSeconds}
-        bronzeLeft={bronzeLeft}
-        silverLeft={silverLeft}
-        goldLeft={goldLeft}
+        bronzeTimerMinutes={bronzeTimerMinutes}
+        bronzeTimerSeconds={bronzeTimerSeconds}
+        silverTimerMinutes={silverTimerMinutes}
+        silverTimerSeconds={silverTimerSeconds}
+        goldTimerMinutes={goldTimerMinutes}
+        goldTimerSeconds={goldTimerSeconds}
       />
       <StakeOptions />
       <StakeFAQ />

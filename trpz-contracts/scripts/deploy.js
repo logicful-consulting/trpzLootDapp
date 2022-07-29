@@ -9,8 +9,8 @@ async function main() {
 
   const LootBoxes = await hre.ethers.getContractFactory("lootBoxes");
   const lootBoxes = await LootBoxes.deploy(
-    "BRONZE Loot",
-    "BRONZETRPZ",
+    "GOLD Loot",
+    "GOLDTRPZ",
     "0xa0a4f43b83971Afb63bEd3F619203AE0fb164AC7"
   );
   await lootBoxes.deployed();
