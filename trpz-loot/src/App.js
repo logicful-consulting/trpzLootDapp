@@ -360,6 +360,8 @@ function App() {
     const goldTimer = await readGoldLootContract.addressCooldown(walletAddress);
     const goldTime = new Date(goldTimer.toNumber() * 1000);
     startTimer(bronzeTime.getTime(), silverTime.getTime(), goldTime.getTime());
+    startSilverTimer(silverTime.getTime());
+    startGoldTimer(goldTime.getTime());
   };
 
     // Timer logic 2
@@ -371,32 +373,53 @@ function App() {
     const [goldTimerSeconds, setGoldTimerSeconds] = useState(null);
   
     let interval; 
-    const startTimer = (date, silverDate, goldDate) => {
+    const startTimer = (date) => {
       interval = setInterval(() => {
         const distance = date - new Date().getTime();
-        const silverDistance = silverDate - new Date().getTime();
-        const goldDistance = goldDate - new Date().getTime();
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const silverMinutes = Math.floor((silverDistance % (1000 * 60 * 60)) / (1000 * 60));
-        const goldMinutes = Math.floor((goldDistance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        const silverSeconds = Math.floor((silverDistance % (1000 * 60)) / 1000);
-        const goldSeconds = Math.floor((goldDistance % (1000 * 60)) / 1000);
         if(distance < 0) {
           clearInterval(interval.current);
           setBronzeTimerMinutes("00")
           setBronzeTimerSeconds("00")
-          setSilverTimerMinutes("00")
-          setSilverTimerSeconds("00")
-          setGoldTimerMinutes("00")
-          setGoldTimerSeconds("00")
-        } else {
+        }
+        else {
           setBronzeTimerMinutes(minutes);
           setBronzeTimerSeconds(0 + seconds);
-          setSilverTimerMinutes(silverMinutes);
-          setSilverTimerSeconds(silverSeconds);
-          setGoldTimerMinutes(goldMinutes);
-          setGoldTimerSeconds(goldSeconds);
+        }
+      })
+    }
+
+    const startSilverTimer = (date) => {
+      interval = setInterval(() => {
+        const distance = date - new Date().getTime();
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        if(distance < 0) {
+          clearInterval(interval.current);
+          setSilverTimerMinutes("00")
+          setSilverTimerSeconds("00")
+        }
+        else {
+          setSilverTimerMinutes(minutes);
+          setSilverTimerSeconds(seconds);
+        }
+      })
+    }
+
+    const startGoldTimer = (date) => {
+      interval = setInterval(() => {
+        const distance = date - new Date().getTime();
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        if(distance < 0) {
+          clearInterval(interval.current);
+          setGoldTimerMinutes("00")
+          setGoldTimerSeconds("00")
+        }
+        else {
+          setGoldTimerMinutes(minutes);
+          setGoldTimerSeconds(seconds);
         }
       })
     }
