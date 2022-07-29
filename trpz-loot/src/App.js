@@ -397,11 +397,6 @@ function App() {
           setSilverTimerSeconds(silverSeconds);
           setGoldTimerMinutes(goldMinutes);
           setGoldTimerSeconds(goldSeconds);
-          if(seconds < 10) {
-            setBronzeTimerSeconds("0" + seconds);
-            setSilverTimerSeconds("0" + silverSeconds);
-            setGoldTimerSeconds("0" + goldSeconds);
-          }
         }
       })
     }
