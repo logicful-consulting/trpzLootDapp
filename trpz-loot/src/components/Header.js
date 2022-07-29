@@ -10,8 +10,8 @@ const Header = params => {
             <img className='header__logo' src={Troopz} alt=""></img>
 		</div>
         <div className="header__center">
-            <p>STAKING</p>
-            <p>LOOT</p>
+            <a href="https://trooprz-staking.netlify.app/">STAKING</a>
+            <a>LOOT</a>
 		</div>
 		<div className="header__button">
             {!params.walletAddress && 

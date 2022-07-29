@@ -275,10 +275,21 @@ function App() {
     }
   };
 
+  const getRecentNFT = async (contract) => {
+    console.log(contract)
+    if(contract === "bronze") {
+      console.log("bronze");
+    } else if (contract === "silver") {
+      console.log("silver");
+    } else {
+
+    }
+  }
+
   const claimLoot = async (boxType, tokenId) => {
     setClaimed(false);
     if (boxType === "bronze") {
-      console.log("Started bronze: ", tokenId);
+      try {
       const writeBronzeContract = new ethers.Contract(
         bronzeLootAddress,
         lootABI,
@@ -293,8 +304,11 @@ function App() {
       await tx.wait();
       alert("You've successfully claimed a Bronze Box! Your reward is ...");
       window.location.reload();
+      } catch (error) {
+        alert("Something went wrong. Please try again.");
+      }
     } else if (boxType === "silver") {
-      console.log("Started silver: ", tokenId);
+      try {
       const writeSilverContract = new ethers.Contract(
         silverLootAddress,
         lootABI,
@@ -309,8 +323,11 @@ function App() {
       await tx.wait();
       alert("You've successfully claimed a Bronze Box! Your reward is ...");
       window.location.reload()
+      } catch (error) {
+        alert("Something went wrong. Please try again.");
+      }
     } else {
-      console.log("Started gold: ", tokenId);
+      try {
       const writeGoldContract = new ethers.Contract(
         goldLootAddress,
         lootABI,
@@ -325,6 +342,9 @@ function App() {
       await tx.wait();
       alert("You've successfully claimed a Bronze Box! Your reward is ...");
       window.location.reload()
+      } catch (error) {
+        alert("Something went wrong. Please try again.");
+      }
     }
   };
 
@@ -356,6 +376,7 @@ function App() {
     try {
       const tx = await writeBronzeLootContract.mintBox();
       setOpenModal(true);
+      setClaimingBox("bronze")
       await tx.wait();
       setMinted(true);
     } catch (error) {
@@ -407,6 +428,7 @@ function App() {
     try {
       const tx = await writeGoldLootContract.mintBox();
       setOpenModal(true);
+      setClaimingBox("gold")
       await tx.wait();
       setMinted(true);
     } catch (error) {
@@ -474,6 +496,7 @@ function App() {
       minted={minted} 
       claimingBox={claimingBox}
       claimLoot={claimLoot}
+      getRecentNFT={getRecentNFT}
       />}
       <LootBanner/>
       <LootBoxes

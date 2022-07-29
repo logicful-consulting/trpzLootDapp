@@ -1,53 +1,68 @@
 .modalBackground {
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    display: flex;
-    justify-content: center;
-  }
-  
-  .modalContainer {
-    width: 500px;
-    height: 240px;
-    border-radius: 12px;
-    background-color: #4D4B46; opacity: 100%;
-    display: flex;
-    flex-direction: column;
-    padding: 25px;
-  }
-  
-  .modalContainer .modalTitle {
-    display: inline-block;
-    text-align: center;
-    margin-top: 10px;
-    color: #FDC91D;
-  }
+  position: fixed;
+  width: 600px;
+  top: 40px;
+  left: calc(50% - 300px);
+  bottom: 40px;
+  background-color: rgba(0,0,0,0.5);
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  z-index: 99999;
+}
 
-  .modalCloseButton {
-    display: flex;
-    justify-content: flex-end;
-  }
+.modalContainer {
+  width: 500px;
+  height: 240px;
+  border-radius: 12px;
+  background-color: #4d4b46;
+  opacity: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+}
 
-  .modalCloseButton button {
-    background-color: transparent;
-    border: none;
-    font-size: 25px;
-    cursor: pointer;
-  }
-  
-  .modalContainer .modalBody {
-    padding: 16px 8px;;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    text-align: center;
-    color: #fff;
-  }
-  
-  .modalContainer .modalFooter {
-    display: flex;
-    margin-top: 8px;
-    justify-content: center;
-    align-items: center;
-  }
+.modalContainer .modalTitle {
+  display: inline-block;
+  text-align: center;
+  margin-top: 10px;
+  color: #fdc91d;
+}
+
+.modalCloseButton {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modalCloseButton button:hover {
+  cursor: pointer;
+}
+
+.modalCloseButton button {
+  background-color: transparent;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.modalContainer .modalBody {
+  padding: 16px 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  text-align: center;
+  color: #fff;
+}
+
+.modalContainer .modalFooter {
+  display: flex;
+  margin-top: 8px;
+  justify-content: center;
+  align-items: center;
+}
