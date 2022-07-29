@@ -66,7 +66,7 @@ function App() {
   ];
   const goldLootAddress = "0x71E0158eC06abC632c11581292B2C041bEcc7FDe";
   const silverLootAddress = "0x5630E973f37d7e06D21A08ad0953005173f1bBDb";
-  const bronzeLootAddress = "0xc0aebb7257cd7156BD01Cd46B57454c1904cfb00";
+  const bronzeLootAddress = "0xF7d4F29caF0F8454D0Cc3f847683e43C7a1FB20a";
   const lootABI = [
     "function mintBox() external",
     "function balanceOf(address) public view returns (uint256)",
@@ -74,6 +74,7 @@ function App() {
     "function tokenURI(uint256) public view returns (string)",
     "function safeTransferFrom(address, address, uint256) public returns (bool)",
     "function boxesAvailable() public view returns (uint64)",
+    "function addressCooldown(address) public view returns (uint256)",
   ];
 
   const providerOptions = {
@@ -206,12 +207,12 @@ function App() {
     if (!readGoldLootContract) return;
     if (!readSilverLootContract) return;
     if (!readBronzeLootContract) return;
-    const goldURI = await readGoldLootContract.tokenURI(1);
-    const silverURI = await readSilverLootContract.tokenURI(1);
-    const bronzeURI = await readBronzeLootContract.tokenURI(1);
-    setGoldURI(goldURI);
-    setSilverURI(silverURI);
-    setBronzeURI(bronzeURI);
+    // const goldURI = await readGoldLootContract.tokenURI(1);
+    // const silverURI = await readSilverLootContract.tokenURI(1);
+    // const bronzeURI = await readBronzeLootContract.tokenURI(1);
+    // setGoldURI(goldURI);
+    // setSilverURI(silverURI);
+    // setBronzeURI(bronzeURI);
   };
 
   const getLootInfo = async () => {
@@ -352,9 +353,9 @@ function App() {
     if (!readGoldLootContract) return;
     if (!readSilverLootContract) return;
     if (!readBronzeLootContract) return;
-    // const bronzeTimer = await readBronzeLootContract.addressCooldown();
-    // console.log(bronzeTimer);
-    startTimer();
+    const bronzeTimer = await readBronzeLootContract.addressCooldown(walletAddress);
+    const time = new Date(bronzeTimer.toNumber() * 1000);
+    startTimer(time.getTime());
   };
 
   const mintBronze = async () => {
@@ -446,17 +447,15 @@ function App() {
   const [timerSeconds, setTimerSeconds] = useState(null);
 
   let interval; 
-  const startTimer = () => {
-    const countDownDate = new Date("July 31, 2022").getTime();
+  const startTimer = (date) => {
     interval = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = countDownDate - now;
+      const distance = date - new Date().getTime();
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
       const seconds = Math.floor((distance % (1000 * 60)) / 1000);
       if(distance < 0) {
         clearInterval(interval.current);
-        setTimerMinutes("00");
-        setTimerSeconds("00");
+        setTimerMinutes("00")
+        setTimerSeconds("00")
       } else {
         setTimerMinutes(minutes);
         if(minutes < 10) {

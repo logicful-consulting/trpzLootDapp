@@ -6,7 +6,7 @@ const ClaimBoxes = (params) => {
   return (
     <div className="stakebody">
       <div className="stakebody__boxes">
-        {params.bronzeBoxes &&
+        {params.bronzeBoxArray &&
           params.bronzeBoxArray.map((box, index) => {
             return (
               <>
@@ -21,13 +21,10 @@ const ClaimBoxes = (params) => {
                         Claim
                       </button>
                     </div>
-                    <div className="stakebody__boxCheck">
-                    </div>
                   </div>
                 </div>
-                ;
               </>
-            );
+            )
           })}
         {params.silverBoxes &&
           params.silverBoxArray.map((box, index) => {
@@ -48,9 +45,8 @@ const ClaimBoxes = (params) => {
                     </div>
                   </div>
                 </div>
-                ;
               </>
-            );
+            )
           })}
         {params.goldBoxes &&
           params.goldBoxArray.map((box, index) => {
@@ -71,7 +67,6 @@ const ClaimBoxes = (params) => {
                     </div>
                   </div>
                 </div>
-                ;
               </>
             );
           })}
