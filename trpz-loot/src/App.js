@@ -404,8 +404,16 @@ function App() {
           setBronzeTimerSeconds("00")
         }
         else {
+          if(minutes < 10) {
+            setBronzeTimerMinutes("0" + minutes);
+          } else {
           setBronzeTimerMinutes(minutes);
+          }
+          if(seconds < 10) {
+            setBronzeTimerSeconds("0" + seconds);
+          } else {
           setBronzeTimerSeconds(0 + seconds);
+          }
         }
       })
     }
@@ -421,8 +429,16 @@ function App() {
           setSilverTimerSeconds("00")
         }
         else {
+          if(minutes < 10) {
+            setSilverTimerMinutes("0" + minutes);
+          } else {
           setSilverTimerMinutes(minutes);
+          }
+          if(seconds < 10) {
+            setSilverTimerSeconds("0" + seconds);
+          } else {
           setSilverTimerSeconds(seconds);
+          }
         }
       })
     }
@@ -438,8 +454,16 @@ function App() {
           setGoldTimerSeconds("00")
         }
         else {
-          setGoldTimerMinutes(minutes);
+          if(minutes < 10) {
+            setGoldTimerSeconds("0" + seconds);
+          } else {
+            setGoldTimerMinutes(minutes);
+          }
+          if(seconds < 10) {
+            setGoldTimerSeconds("0" + seconds);
+          } else {
           setGoldTimerSeconds(seconds);
+          }
         }
       })
     }

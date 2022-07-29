@@ -21,9 +21,8 @@ const Modal = (params) => {
           {params.minted && <div className="modalFooter">
             <button className="button"
             onClick={() => {
-              const NFTId = params.getRecentNFT("gold")
-              params.claimLoot("gold", NFTId)
-              // params.getRecentNFT(params.claimingBox)
+              const NFTId = params.getRecentNFT(params.claimingBox)
+              params.claimLoot(params.claimingBox, NFTId)
             }}
             >Claim Rewards</button>
           </div>
