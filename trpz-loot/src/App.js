@@ -52,7 +52,8 @@ function App() {
 
   const [openModal, setOpenModal] = useState(false);
   const [minted, setMinted] = useState(false);
-  const [claimed, setClaimed] = useState(false);
+  const [claimingLoot, setClaimingLoot] = useState(false);
+  const [claimedLoot, setClaimedLoot] = useState(false);
   const [claimingBox, setClaimingBox] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -308,7 +309,6 @@ function App() {
   }
 
   const claimLoot = async (boxType, tokenId) => {
-    setClaimed(false);
     if (boxType === "bronze") {
       try {
       const writeBronzeContract = new ethers.Contract(
@@ -321,12 +321,12 @@ function App() {
         adminAddress,
         tokenId
       );
-      alert("Waiting for transaction to be completed. Please wait a second...");
+      setClaimingLoot(true);
       await tx.wait();
-      alert("You've successfully claimed a Bronze Box! Your reward is ...");
-      window.location.reload();
+      setClaimedLoot(true)
       } catch (error) {
         alert("Something went wrong. Please try again.");
+        setClaimingLoot(false);
       }
     } else if (boxType === "silver") {
       try {
@@ -340,12 +340,12 @@ function App() {
         adminAddress,
         tokenId
       );
-      alert("Waiting for transaction to be completed. Please wait a second...");
+      setClaimingLoot(true);
       await tx.wait();
-      alert("You've successfully claimed a Silver Box! Your reward is ...");
-      window.location.reload()
+      setClaimedLoot(true)
       } catch (error) {
         alert("Something went wrong. Please try again.");
+        setClaimingLoot(false);
       }
     } else {
       try {
@@ -359,12 +359,12 @@ function App() {
         adminAddress,
         tokenId
       );
-      alert("Waiting for transaction to be completed. Please wait a second...");
+      setClaimingLoot(true);
       await tx.wait();
-      alert("You've successfully claimed a Gold Box! Your reward is ...");
-      window.location.reload()
+      setClaimedLoot(true)
       } catch (error) {
         alert("Something went wrong. Please try again.");
+        setClaimingLoot(false);
       }
     }
   };
@@ -550,6 +550,9 @@ function App() {
   function closeModal() {
     setOpenModal(false);
     setMinted(false);
+    setClaimedLoot(false);
+    setClaimingLoot(false);
+    setClaimingBox(null);
   }
 
   return (
@@ -577,6 +580,8 @@ function App() {
       closeModal={closeModal} 
       minted={minted} 
       claimingBox={claimingBox}
+      claimingLoot={claimingLoot}
+      claimedLoot={claimedLoot}
       claimLoot={claimLoot}
       getRecentNFT={getRecentNFT}
       />}
