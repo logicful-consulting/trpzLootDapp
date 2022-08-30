@@ -5,7 +5,7 @@ import { ethers, providers } from "ethers";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import StakeBanner from "./components/StakeBanner";
-import ClaimBoxes from "./components/ClaimBoxes";
+import ClaimBoxes, { LOOT_API_URL } from "./components/ClaimBoxes";
 import StakeFAQ from "./components/LootFAQ";
 import StakeOptions from "./components/LootOptions";
 import LootBoxes from "./components/LootBoxes";
@@ -17,6 +17,7 @@ import dayjs from "dayjs";
 import { useMoralisWeb3Api } from "react-moralis";
 import ClipLoader from "react-spinners/ClipLoader"
 import LootBanner from "./components/LootBanner";
+
 
 function App() {
   const Web3Api = useMoralisWeb3Api();
@@ -52,8 +53,9 @@ function App() {
 
   const [openModal, setOpenModal] = useState(false);
   const [minted, setMinted] = useState(false);
+  const [mintedTokenId, setMintedTokenId] = useState(null);
   const [claimingLoot, setClaimingLoot] = useState(false);
-  const [claimedLoot, setClaimedLoot] = useState(false);
+  const [claimedLoot, setClaimedLoot] = useState({});
   const [claimingBox, setClaimingBox] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -241,8 +243,7 @@ function App() {
         for(let i = 0; i < NFTs.result.length; i++) {
           bronzeObjects.push(NFTs.result[i].token_id);
         }
-        setBronzeBoxArray(bronzeObjects);
-        console.log(bronzeObjects);
+        setBronzeBoxArray(bronzeObjects.reverse());
       }
       if (silverBoxes > 0) {
         const options = {
@@ -255,8 +256,7 @@ function App() {
         for(let i = 0; i < NFTs.result.length; i++) {
           silverObjects.push(NFTs.result[i].token_id);
         }
-        setSilverBoxArray(silverObjects);
-        console.log(silverObjects);
+        setSilverBoxArray(silverObjects.reverse());
       }
       if (goldBoxes > 0) {
         const options = {
@@ -269,103 +269,32 @@ function App() {
         for(let i = 0; i < NFTs.result.length; i++) {
           goldObjects.push(NFTs.result[i].token_id);
         }
-        setGoldBoxArray(goldObjects);
-        console.log(goldObjects);
+        setGoldBoxArray(goldObjects.reverse());
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getRecentNFT = async (contract) => {
-    if(contract === "bronze") {
-      const options = {
-        chain: "goerli",
-        address: walletAddress,
-        token_address: bronzeLootAddress,
-      };
-      let NFTs = await Web3Api.account.getNFTsForContract(options);
-      const newestNFT = NFTs.result[0].token_id
-      return newestNFT;
-    } else if (contract === "silver") {
-      const options = {
-        chain: "goerli",
-        address: walletAddress,
-        token_address: silverLootAddress,
-      };
-      let NFTs = await Web3Api.account.getNFTsForContract(options);
-      const newestNFT = NFTs.result[0].token_id
-      return newestNFT;
-    } else {
-      const options = {
-        chain: "goerli",
-        address: walletAddress,
-        token_address: goldLootAddress,
-      };
-      let NFTs = await Web3Api.account.getNFTsForContract(options);
-      const newestNFT = NFTs.result[0].token_id
-      return newestNFT;
-    }
-  }
-
-  const claimLoot = async (boxType, tokenId) => {
-    if (boxType === "bronze") {
-      try {
-      const writeBronzeContract = new ethers.Contract(
-        bronzeLootAddress,
-        lootABI,
-        signer
-      );
-      const tx = await writeBronzeContract.safeTransferFrom(
-        walletAddress,
-        adminAddress,
-        tokenId
-      );
+  const claimLoot = async (boxType, tokenId, address) => {
+    try {
       setClaimingLoot(true);
-      await tx.wait();
-      setClaimedLoot(true)
-      } catch (error) {
-        alert("Something went wrong. Please try again.");
-        setClaimingLoot(false);
-      }
-    } else if (boxType === "silver") {
-      try {
-      const writeSilverContract = new ethers.Contract(
-        silverLootAddress,
-        lootABI,
-        signer
-      );
-      const tx = await writeSilverContract.safeTransferFrom(
-        walletAddress,
-        adminAddress,
-        tokenId
-      );
-      setClaimingLoot(true);
-      await tx.wait();
-      setClaimedLoot(true)
-      } catch (error) {
-        alert("Something went wrong. Please try again.");
-        setClaimingLoot(false);
-      }
-    } else {
-      try {
-      const writeGoldContract = new ethers.Contract(
-        goldLootAddress,
-        lootABI,
-        signer
-      );
-      const tx = await writeGoldContract.safeTransferFrom(
-        walletAddress,
-        adminAddress,
-        tokenId
-      );
-      setClaimingLoot(true);
-      await tx.wait();
-      setClaimedLoot(true)
-      } catch (error) {
-        alert("Something went wrong. Please try again.");
-        setClaimingLoot(false);
-      }
+      const response = await fetch(LOOT_API_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          boxType, tokenId, address
+        }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+      })
+      const data = await response.json();
+      setClaimedLoot(data)
+      return data
+    } catch (error) {
+      console.log(error)
+      alert("Something went wrong. Please try again.");
+      setClaimingLoot(false);
     }
   };
 
@@ -488,8 +417,12 @@ function App() {
       const tx = await writeBronzeLootContract.mintBox();
       setOpenModal(true);
       setClaimingBox("bronze")
-      await tx.wait();
+      const receipt = await tx.wait();
+      const topic = receipt.logs[0].topics[3];
+      console.log(receipt)
+      const tokenId = parseInt(Number(topic));
       setMinted(true);
+      setMintedTokenId(tokenId)
     } catch (error) {
       alert("Something went wrong. Please try again.");
     }
@@ -514,8 +447,12 @@ function App() {
       const tx = await writeSilverLootContract.mintBox();
       setOpenModal(true);
       setClaimingBox("silver")
-      await tx.wait();
+      const receipt = await tx.wait();
+      const topic = receipt.logs[0].topics[3];
+      console.log(receipt)
+      const tokenId = parseInt(Number(topic));
       setMinted(true);
+      setMintedTokenId(tokenId)
     } catch (error) {
       alert("Something went wrong. Please try again.");
     }
@@ -540,8 +477,12 @@ function App() {
       const tx = await writeGoldLootContract.mintBox();
       setOpenModal(true);
       setClaimingBox("gold")
-      await tx.wait();
+      const receipt = await tx.wait();
+      const topic = receipt.logs[0].topics[3];
+      console.log(receipt)
+      const tokenId = parseInt(Number(topic));
       setMinted(true);
+      setMintedTokenId(tokenId)
     } catch (error) {
       alert("Something went wrong. Please try again.");
     }
@@ -550,7 +491,7 @@ function App() {
   function closeModal() {
     setOpenModal(false);
     setMinted(false);
-    setClaimedLoot(false);
+    setClaimedLoot({});
     setClaimingLoot(false);
     setClaimingBox(null);
   }
@@ -574,6 +515,7 @@ function App() {
         goldBoxes={goldBoxes}
         goldBoxArray={goldBoxArray}
         claimLoot={claimLoot}
+        walletAddress={walletAddress}
       />
       }
       {openModal && <Modal 
@@ -583,8 +525,10 @@ function App() {
       claimingLoot={claimingLoot}
       claimedLoot={claimedLoot}
       claimLoot={claimLoot}
-      getRecentNFT={getRecentNFT}
-      />}
+      walletAddress={walletAddress}
+      mintedTokenId={mintedTokenId}
+      setClaimedLoot={setClaimedLoot}
+        />}
       <LootBanner/>
       <LootBoxes
         mintBronze={mintBronze}

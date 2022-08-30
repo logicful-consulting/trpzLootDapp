@@ -137,11 +137,16 @@
     padding: 4px 0px 4px 8px;
 }
 
-.stakebody__boxButtons {
-    display: flex;
+.stakebody__boxContent {
     align-items: center;
     justify-content: space-between;
     padding: 12px 8px 8px 8px;
+}
+
+.stakebody__boxContentText,
+.stakebody__boxContentLink {
+    color: white;
+    margin-bottom: 10px;
 }
 
 .stakebody__boxCheck {
@@ -167,6 +172,7 @@
     color: #333;
     font-weight: bold;
     cursor: pointer;
+    width: 100%;
 }
 
 .stakebody__boxButtonSingleCounter {
